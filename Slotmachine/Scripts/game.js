@@ -225,7 +225,7 @@ function pinkButtonOut() {
 /* Utility function to show a win message and increase player money */
 function showWinMessage() {
     playerMoney += winnings;
-    //  $("div#winOrLose>p").text("You Won: $" + winnings);
+    //u  $("div#winOrLose>p").text("You Won: $" + winnings);
     resetFruitTally();
     checkJackPot();
 }
