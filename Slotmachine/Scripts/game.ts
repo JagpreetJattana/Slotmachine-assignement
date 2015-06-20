@@ -264,15 +264,7 @@ function resetAll() {
 }
 
 
-// Mouseover event
-function pinkButtonOver() {
-    
-}
 
-// Mouseout event
-function pinkButtonOut() {
-    
-}
 
 /* Utility function to show a win message and increase player money */
 function showWinMessage() {
