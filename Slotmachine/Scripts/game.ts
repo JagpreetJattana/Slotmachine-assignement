@@ -22,12 +22,14 @@ var NUM_REELS: number = 3;
 var assets: createjs.LoadQueue;
 var manifest = [
     { id: "background", src: "assets/images/slot-machine2.png" },
-    { id: "clicked", src: "assets/audio/clicked.wav" },
-    { id: "powerButton", src: "assets/images/powerButton.png" }
+    { id: "poweroff", src: "assets/audio/powerOff.wav" },
+    { id: "start", src: "assets/audio/start.wav" },
+    { id: "clicked", src: "assets/audio/clicked.wav" }
+    
 ];
 
 var atlas ={
-    "images": ["assets/images/atlas.png"],
+    "images": ["assets/images/atlas3.png"],
 "frames": [
 
     [2, 2, 64, 64],
@@ -42,7 +44,10 @@ var atlas ={
     [134, 68, 64, 64],
     [134, 134, 49, 49],
     [68, 134, 64, 64],
-    [185, 155, 49, 49]
+    [185, 155, 49, 49],
+    [2, 200, 45, 45],
+    [68, 200, 75, 30]
+    
 ],
 "animations": {
 
@@ -58,7 +63,9 @@ var atlas ={
     "orangeSymbol":[9],
     "resetButton":[10],
     "sevenSymbol":[11],
-    "spinButton":[12]
+    "spinButton": [12],
+    "powerButton": [13],
+    "startButton":[14]
 }
 }
 
@@ -68,6 +75,7 @@ var atlas ={
 var background: createjs.Bitmap;
 var textureAtlas: createjs.SpriteSheet;
 var powerButton: objects.Button;
+var startButton: objects.Button;
 var spinButton: objects.Button;
 var betOne: objects.Button;
 var betTen: objects.Button;
@@ -82,6 +90,8 @@ var betTenLbl: objects.Label;
 var betMaxLbl: objects.Label;
 var jackpotWinLbl: objects.Label;
 var notenoughMoneylbl: objects.Label;
+var startLbl: objects.Label;
+var spinResultLbl: objects.Label;
 
 //tally variable
 var jackpot = 5000;
@@ -267,10 +277,16 @@ function determineWinnings() {
         }
         winNumber++;
         showWinMessage();
+        stage.removeChild(spinResultLbl);
+        spinResultLbl = new objects.Label("+" + winnings.toString(), 260, 385, false);
+        stage.addChild(spinResultLbl);
     }
     else {
         lossNumber++;
         showLossMessage();
+        stage.removeChild(spinResultLbl);
+        spinResultLbl = new objects.Label("-" + playerBet.toString(), 260, 385, false);
+        stage.addChild(spinResultLbl);
     }
 
 }
@@ -279,11 +295,11 @@ function determineWinnings() {
 /* Utility function to show a loss message and reduce player money */
 function showLossMessage() {
     playerMoney -= playerBet;
-    //$("div#winOrLose>p").text("You Lost!");
     stage.removeChild(winMsg);
     stage.removeChild(loseMsg);
     stage.removeChild(jackpotWinLbl);
     stage.removeChild(notenoughMoneylbl);
+    ///adding the label that comes up when player loses
     loseMsg = new objects.Label("You Lose", 160, 80,false);
     stage.addChild(loseMsg);
     resetFruitTally();
@@ -292,12 +308,11 @@ function showLossMessage() {
 /* Utility function to show a win message and increase player money */
 function showWinMessage() {
     playerMoney += winnings;
-    //$("div#winOrLose>p").text("You Won: $" + winnings);
-    console.log("you won");
     stage.removeChild(loseMsg);
     stage.removeChild(winMsg);
     stage.removeChild(jackpotWinLbl);
     stage.removeChild(notenoughMoneylbl);
+    //adding that comes up when player wins
     winMsg = new objects.Label("You Won", 160, 80, false);
     stage.addChild(winMsg);
     resetFruitTally();
@@ -315,6 +330,7 @@ function checkJackPot() {
         stage.removeChild(winMsg);
         stage.removeChild(jackpotWinLbl);
         stage.removeChild(notenoughMoneylbl);
+        //adding label that will be shown when player will win a jackpot
         jackpotWinLbl = new objects.Label("You Won a Jackpot", 140, 80, false);
         stage.addChild(jackpotWinLbl);
         playerMoney += jackpot;
@@ -328,24 +344,47 @@ function setPlayerBet(bet:number) {
 }
 
 
+/* Utility function to reset all fruit tallies */
+function resetFruitTally() {
+    grapes = 0;
+    bananas = 0;
+    oranges = 0;
+    cherries = 0;
+    bars = 0;
+    bells = 0;
+    sevens = 0;
+    blanks = 0;
+}
+
+/* Utility function to reset the player stats */
+function resetAll() {
+    playerMoney = 1000;
+    winnings = 0;
+    jackpot = 5000;
+    turn = 0;
+    playerBet = 0;
+    winNumber = 0;
+    lossNumber = 0;
+    winRatio = 0;
+}
 
 
+/* Utility function to show Player Stats */
+function showPlayerStats() {
+    winRatio = winNumber / turn;
+    stage.removeChild(playerMoneyLbl);
+    stage.removeChild(jackpotLbl);
+    jackpotLbl = new objects.Label("$" + jackpot.toString(), 170, 133, false);
+    playerMoneyLbl = new objects.Label("$" + playerMoney.toString(), 45, 385, false);
+    stage.addChild(jackpotLbl);
+    stage.addChild(playerMoneyLbl);
+}
 
-// Callback function that allows me to respond to button click events
+
+// Callback functions that allows me to respond to button click events
+//function that will work when pressed spin button
 function spinButtonClicked(event: createjs.MouseEvent) {
     createjs.Sound.play("clicked");
-
-
-  //  spinResult = Reels();
-  //  fruits = spinResult[0] + " - " + spinResult[1] + " - " + spinResult[2];
-
-  //  console.log(fruits);
-
-
-    //new code to test functionality
-
-  //  playerBet = $("div#betEntry>input").val();
-    //playerBet = 20;
 
     if (playerMoney == 0) {
         if (confirm("You ran out of Money! \nDo you want to play again?")) {
@@ -367,8 +406,7 @@ function spinButtonClicked(event: createjs.MouseEvent) {
     else if (playerBet <= playerMoney) {
         spinResult = Reels();
         fruits = spinResult[0] + " - " + spinResult[1] + " - " + spinResult[2];
-        //$("div#result>p").text(fruits);
-        determineWinnings();
+         determineWinnings();
         turn++;
         showPlayerStats();
     }
@@ -426,6 +464,7 @@ function betTenButtonClicked(event: createjs.MouseEvent) {
 function betMaxButtonClicked(event: createjs.MouseEvent) {
 
     createjs.Sound.play("clicked");
+    
     setPlayerBet(playerMoney);
     stage.removeChild(betOneLbl);
     stage.removeChild(betTenLbl);
@@ -434,55 +473,28 @@ function betMaxButtonClicked(event: createjs.MouseEvent) {
     stage.addChild(betMaxLbl);
 
 }
+//function that will work when clicked powerbutton
+function powerButtonClicked(event: createjs.MouseEvent) {
+    createjs.Sound.play("poweroff");
+   
+   window.setTimeout(window.close(), 10000);
 
-
-/* Utility function to show Player Stats */
-function showPlayerStats() {
-    winRatio = winNumber / turn;
-   // $("#jackpot").text("Jackpot: " + jackpot);
-    stage.removeChild(playerMoneyLbl);
-    stage.removeChild(jackpotLbl);
-    jackpotLbl = new objects.Label("$"+jackpot.toString(), 170, 133, false);
-    playerMoneyLbl = new objects.Label("$"+playerMoney.toString(), 45, 385, false);
-    stage.addChild(jackpotLbl);
-    stage.addChild(playerMoneyLbl);
-   // $("#playerMoney").text("Player Money: " + playerMoney);
-   // $("#playerTurn").text("Turn: " + turn);
-  //  $("#playerWins").text("Wins: " + winNumber);
- //   $("#playerLosses").text("Losses: " + lossNumber);
- //   $("#playerWinRatio").text("Win Ratio: " + (winRatio * 100).toFixed(2) + "%");
 }
 
+//function that will work when pressed start button
+function startButtonClicked(event: createjs.MouseEvent) {
+    createjs.Sound.play("start");
+    stage.addChild(spinButton);
+    stage.addChild(resetButton);
+    stage.addChild(betOne);
+    stage.addChild(betMax);
+    stage.addChild(betTen);
+    resetAll();
+    showPlayerStats();
+    stage.removeChild(startButton);
+    stage.removeChild(startLbl);
 
-
-
-
-/* Utility function to reset all fruit tallies */
-function resetFruitTally() {
-    grapes = 0;
-    bananas = 0;
-    oranges = 0;
-    cherries = 0;
-    bars = 0;
-    bells = 0;
-    sevens = 0;
-    blanks = 0;
 }
-
-/* Utility function to reset the player stats */
-function resetAll() {
-    playerMoney = 1000;
-    winnings = 0;
-    jackpot = 5000;
-    turn = 0;
-    playerBet = 0;
-    winNumber = 0;
-    lossNumber = 0;
-    winRatio = 0;
-}
-
-
-
 
 
 
@@ -493,6 +505,7 @@ function main() {
     background = new createjs.Bitmap(assets.getResult("background"));
     stage.addChild(background);
 
+    //to show the symbols in three screens
     for (var index = 0; index < NUM_REELS; index++) {
         reelContainers[index] = new createjs.Container();
         stage.addChild(reelContainers[index]);
@@ -506,28 +519,37 @@ function main() {
 
     
 
-    // add spin button
-    spinButton = new objects.Button("spinButton", 288, 415, false);
-    stage.addChild(spinButton);
+    // add SPIN button
+    spinButton = new objects.Button("spinButton", 288, 415, false);    
     spinButton.on("click", spinButtonClicked, this);
 
-    resetButton = new objects.Button("resetButton", 25, 415, false);
-    stage.addChild(resetButton);
+    //add RESET button
+    resetButton = new objects.Button("resetButton", 25, 415, false);    
     resetButton.on("click", resetButtonClicked, this);
 
-    betOne = new objects.Button("betOneButton", 90, 415, false);
-    stage.addChild(betOne);
+    //add BET ONE button
+    betOne = new objects.Button("betOneButton", 90, 415, false);    
     betOne.on("click", betOneButtonClicked, this);
-
-    betMax = new objects.Button("betMaxButton", 156, 415, false);
-    stage.addChild(betMax);
+    
+    //add BET MAX button
+    betMax = new objects.Button("betMaxButton", 156, 415, false);    
     betMax.on("click", betMaxButtonClicked, this);
 
-    betTen = new objects.Button("betTenButton", 222, 415, false);
-    stage.addChild(betTen);
+    //add BET TEN button
+    betTen = new objects.Button("betTenButton", 222, 415, false);    
     betTen.on("click", betTenButtonClicked, this);
 
-    powerButton = new objects.Button(assets.getResult("powerButton"), 300, 50,false);
+    //add POWER button
+    powerButton = new objects.Button("powerButton", 300, 70,false);
     stage.addChild(powerButton);
+    powerButton.on("click", powerButtonClicked, this);
 
+    //add START button
+    startButton = new objects.Button("startButton", 260, 415, false);
+    stage.addChild(startButton);
+    startButton.on("click", startButtonClicked, this);
+
+    //Add label that is visible when form loads
+    startLbl = new objects.Label("Click 'START' button\n\n to start game", 25, 415, false);
+    stage.addChild(startLbl);
 }

@@ -59,7 +59,10 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="assets\audio\powerOff.wav" />
+    <Content Include="assets\audio\start.wav" />
     <Content Include="assets\images\atlas.png" />
+    <Content Include="assets\images\atlas2.png" />
     <Content Include="assets\images\bananaSym.png" />
     <Content Include="assets\images\barSym.png" />
     <Content Include="assets\images\bellSym.png" />
