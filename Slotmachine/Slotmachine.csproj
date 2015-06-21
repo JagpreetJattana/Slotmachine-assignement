@@ -71,6 +71,7 @@
     <Content Include="assets\images\cherrySym.png" />
     <Content Include="assets\images\grapesSym.png" />
     <Content Include="assets\images\orangeSym.png" />
+    <Content Include="assets\images\powerButton.png" />
     <Content Include="assets\images\resetButton.png" />
     <Content Include="assets\images\sevenSym.png" />
     <Content Include="assets\images\slot-machine2.png" />

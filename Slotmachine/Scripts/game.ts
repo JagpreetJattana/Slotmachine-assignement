@@ -22,7 +22,8 @@ var NUM_REELS: number = 3;
 var assets: createjs.LoadQueue;
 var manifest = [
     { id: "background", src: "assets/images/slot-machine2.png" },
-    { id: "clicked", src: "assets/audio/clicked.wav" }
+    { id: "clicked", src: "assets/audio/clicked.wav" },
+    { id: "powerButton", src: "assets/images/powerButton.png" }
 ];
 
 var atlas ={
@@ -66,6 +67,7 @@ var atlas ={
 // Game Variables
 var background: createjs.Bitmap;
 var textureAtlas: createjs.SpriteSheet;
+var powerButton: objects.Button;
 var spinButton: objects.Button;
 var betOne: objects.Button;
 var betTen: objects.Button;
@@ -79,6 +81,7 @@ var betOneLbl: objects.Label;
 var betTenLbl: objects.Label;
 var betMaxLbl: objects.Label;
 var jackpotWinLbl: objects.Label;
+var notenoughMoneylbl: objects.Label;
 
 //tally variable
 var jackpot = 5000;
@@ -280,6 +283,7 @@ function showLossMessage() {
     stage.removeChild(winMsg);
     stage.removeChild(loseMsg);
     stage.removeChild(jackpotWinLbl);
+    stage.removeChild(notenoughMoneylbl);
     loseMsg = new objects.Label("You Lose", 160, 80,false);
     stage.addChild(loseMsg);
     resetFruitTally();
@@ -293,6 +297,7 @@ function showWinMessage() {
     stage.removeChild(loseMsg);
     stage.removeChild(winMsg);
     stage.removeChild(jackpotWinLbl);
+    stage.removeChild(notenoughMoneylbl);
     winMsg = new objects.Label("You Won", 160, 80, false);
     stage.addChild(winMsg);
     resetFruitTally();
@@ -309,6 +314,7 @@ function checkJackPot() {
         stage.removeChild(loseMsg);
         stage.removeChild(winMsg);
         stage.removeChild(jackpotWinLbl);
+        stage.removeChild(notenoughMoneylbl);
         jackpotWinLbl = new objects.Label("You Won a Jackpot", 140, 80, false);
         stage.addChild(jackpotWinLbl);
         playerMoney += jackpot;
@@ -348,7 +354,12 @@ function spinButtonClicked(event: createjs.MouseEvent) {
         }
     }
     else if (playerBet > playerMoney) {
-        alert("You don't have enough Money to place that bet...");
+        stage.removeChild(loseMsg);
+        stage.removeChild(winMsg);
+        stage.removeChild(jackpotWinLbl);
+        stage.removeChild(notenoughMoneylbl);
+        notenoughMoneylbl = new objects.Label("You dont have enogh money for this bet", 100, 80, false);
+
     }
     else if (playerBet < 0) {
         alert("All bets must be a positive $ amount.");
@@ -515,5 +526,8 @@ function main() {
     betTen = new objects.Button("betTenButton", 222, 415, false);
     stage.addChild(betTen);
     betTen.on("click", betTenButtonClicked, this);
+
+    powerButton = new objects.Button(assets.getResult("powerButton"), 300, 50,false);
+    stage.addChild(powerButton);
 
 }
