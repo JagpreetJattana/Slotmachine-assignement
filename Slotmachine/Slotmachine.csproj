@@ -60,6 +60,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="assets\audio\powerOff.wav" />
+    <Content Include="assets\audio\spinning.wav" />
     <Content Include="assets\audio\start.wav" />
     <Content Include="assets\images\atlas.png" />
     <Content Include="assets\images\atlas2.png" />

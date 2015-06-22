@@ -19,6 +19,7 @@ var manifest = [
     { id: "background", src: "assets/images/slot-machine2.png" },
     { id: "poweroff", src: "assets/audio/powerOff.wav" },
     { id: "start", src: "assets/audio/start.wav" },
+    { id: "spinning", src: "assets/audio/spinning.wav" },
     { id: "clicked", src: "assets/audio/clicked.wav" }
 ];
 var atlas = {
@@ -96,6 +97,7 @@ var playerBet = 0;
 var winNumber = 0;
 var lossNumber = 0;
 var winRatio = 0;
+var stop = 0;
 var spinResult;
 var fruits = "";
 // Preloader Function
@@ -335,39 +337,62 @@ function showPlayerStats() {
 // Callback functions that allows me to respond to button click events
 //function that will work when pressed spin button
 function spinButtonClicked(event) {
-    createjs.Sound.play("clicked");
-    if (playerMoney == 0) {
-        if (confirm("You ran out of Money! \nDo you want to play again?")) {
-            resetAll();
+    createjs.Sound.play("spinning");
+    /* setInterval(function () {
+         //if (stop > 10) { clearInterval(muyvar); }
+         for (var index = 0; index < NUM_REELS; index++) {
+             reelContainers[index].removeAllChildren();
+             tiles[index] = new createjs.Bitmap("assets/images/" + spinResult[index] + ".png");
+             reelContainers[index].addChild(tiles[index]);
+         }
+         console.log("sdf");
+         
+     }, 500)*/
+    setTimeout(function () {
+        if (playerMoney == 0) {
+            if (confirm("You ran out of Money! \nDo you want to play again?")) {
+                resetAll();
+                showPlayerStats();
+            }
+        }
+        else if (playerBet > playerMoney) {
+            stage.removeChild(loseMsg);
+            stage.removeChild(winMsg);
+            stage.removeChild(jackpotWinLbl);
+            stage.removeChild(notenoughMoneylbl);
+            notenoughMoneylbl = new objects.Label("You dont have enogh money for this bet", 100, 80, false);
+        }
+        else if (playerBet < 0) {
+            alert("All bets must be a positive $ amount.");
+        }
+        else if (playerBet <= playerMoney) {
+            spinResult = Reels();
+            fruits = spinResult[0] + " - " + spinResult[1] + " - " + spinResult[2];
+            determineWinnings();
+            turn++;
             showPlayerStats();
         }
-    }
-    else if (playerBet > playerMoney) {
-        stage.removeChild(loseMsg);
-        stage.removeChild(winMsg);
-        stage.removeChild(jackpotWinLbl);
-        stage.removeChild(notenoughMoneylbl);
-        notenoughMoneylbl = new objects.Label("You dont have enogh money for this bet", 100, 80, false);
-    }
-    else if (playerBet < 0) {
-        alert("All bets must be a positive $ amount.");
-    }
-    else if (playerBet <= playerMoney) {
-        spinResult = Reels();
-        fruits = spinResult[0] + " - " + spinResult[1] + " - " + spinResult[2];
-        determineWinnings();
-        turn++;
-        showPlayerStats();
-    }
-    else {
-        alert("Please enter a valid bet amount");
-    }
-    // Iterate over the number of reels
-    for (var index = 0; index < NUM_REELS; index++) {
-        reelContainers[index].removeAllChildren();
-        tiles[index] = new createjs.Bitmap("assets/images/" + spinResult[index] + ".png");
-        reelContainers[index].addChild(tiles[index]);
-    }
+        else {
+            alert("Please enter a valid bet amount");
+        }
+        // Iterate over the number of reels
+        // for (var index = 0; index < NUM_REELS; index++) {
+        //      reelContainers[index].removeAllChildren();
+        //       tiles[index] = new createjs.Bitmap("assets/images/" + spinResult[index] + ".png");
+        //      reelContainers[index].addChild(tiles[index]);
+        //  }
+    }, 1500);
+    // var myvar=setInterval(function () {
+    //if (stop > 10) { clearInterval(muyvar); }
+    //    for (var index = 0; index < NUM_REELS; index++) {
+    //     reelContainers[index].removeAllChildren();
+    //       tiles[index] = new createjs.Bitmap("assets/images/" + spinResult[index] + ".png");
+    //     reelContainers[index].addChild(tiles[index]);
+    //  }
+    //  stop += 1;
+    //  if (stop > 10) { clearInterval(myvar); }
+    //  console.log(stop.toString());
+    //   }, 500) 
 }
 //function that will work on pressing reset button
 function resetButtonClicked(event) {
@@ -408,7 +433,7 @@ function betMaxButtonClicked(event) {
 //function that will work when clicked powerbutton
 function powerButtonClicked(event) {
     createjs.Sound.play("poweroff");
-    window.setTimeout(window.close(), 10000);
+    window.setTimeout(function () { window.close(); }, 2000);
 }
 //function that will work when pressed start button
 function startButtonClicked(event) {

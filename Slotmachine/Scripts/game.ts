@@ -24,6 +24,7 @@ var manifest = [
     { id: "background", src: "assets/images/slot-machine2.png" },
     { id: "poweroff", src: "assets/audio/powerOff.wav" },
     { id: "start", src: "assets/audio/start.wav" },
+    { id: "spinning", src: "assets/audio/spinning.wav" },
     { id: "clicked", src: "assets/audio/clicked.wav" }
     
 ];
@@ -110,6 +111,7 @@ var playerBet = 0;
 var winNumber = 0;
 var lossNumber = 0;
 var winRatio = 0;
+var stop = 0;
 
 var spinResult;
 var fruits = "";
@@ -384,7 +386,19 @@ function showPlayerStats() {
 // Callback functions that allows me to respond to button click events
 //function that will work when pressed spin button
 function spinButtonClicked(event: createjs.MouseEvent) {
-    createjs.Sound.play("clicked");
+    createjs.Sound.play("spinning");
+   /* setInterval(function () {
+        //if (stop > 10) { clearInterval(muyvar); }
+        for (var index = 0; index < NUM_REELS; index++) {
+            reelContainers[index].removeAllChildren();
+            tiles[index] = new createjs.Bitmap("assets/images/" + spinResult[index] + ".png");
+            reelContainers[index].addChild(tiles[index]);
+        }
+        console.log("sdf");
+        
+    }, 500)*/
+
+    setTimeout(function () {   
 
     if (playerMoney == 0) {
         if (confirm("You ran out of Money! \nDo you want to play again?")) {
@@ -415,11 +429,26 @@ function spinButtonClicked(event: createjs.MouseEvent) {
     }
 
     // Iterate over the number of reels
-    for (var index = 0; index < NUM_REELS; index++) {
-        reelContainers[index].removeAllChildren();
-        tiles[index] = new createjs.Bitmap("assets/images/" + spinResult[index] + ".png");
-        reelContainers[index].addChild(tiles[index]);
-    }
+   
+
+       // for (var index = 0; index < NUM_REELS; index++) {
+     //      reelContainers[index].removeAllChildren();
+     //       tiles[index] = new createjs.Bitmap("assets/images/" + spinResult[index] + ".png");
+      //      reelContainers[index].addChild(tiles[index]);
+      //  }
+    }, 1500);
+   // var myvar=setInterval(function () {
+        //if (stop > 10) { clearInterval(muyvar); }
+    //    for (var index = 0; index < NUM_REELS; index++) {
+       //     reelContainers[index].removeAllChildren();
+     //       tiles[index] = new createjs.Bitmap("assets/images/" + spinResult[index] + ".png");
+       //     reelContainers[index].addChild(tiles[index]);
+      //  }
+      //  stop += 1;
+      //  if (stop > 10) { clearInterval(myvar); }
+      //  console.log(stop.toString());
+
+ //   }, 500) 
 
 }
 
@@ -477,7 +506,7 @@ function betMaxButtonClicked(event: createjs.MouseEvent) {
 function powerButtonClicked(event: createjs.MouseEvent) {
     createjs.Sound.play("poweroff");
    
-   window.setTimeout(window.close(), 10000);
+    window.setTimeout(function () { window.close() }, 2000);
 
 }
 
