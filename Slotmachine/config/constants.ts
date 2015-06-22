@@ -1,4 +1,5 @@
 ﻿module config {
+    //this class defines constants that are used in game
     // FONT CONSTANTS
     export var FONT_LABEL: string = "12px";
     export var FONT_SMALL: string = "20px";

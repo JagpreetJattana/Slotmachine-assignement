@@ -111,7 +111,7 @@ var playerBet = 0;
 var winNumber = 0;
 var lossNumber = 0;
 var winRatio = 0;
-var stop = 0;
+var stop = 1;
 
 var spinResult;
 var fruits = "";
@@ -163,9 +163,9 @@ function setupStats() {
 // Callback function that creates our Main Game Loop - refreshed 60 fps
 function gameLoop() {
     stats.begin(); // Begin measuring
-
+    checkBet();
     stage.update();
-
+    
     stats.end(); // end measuring
 }
 
@@ -387,18 +387,21 @@ function showPlayerStats() {
 //function that will work when pressed spin button
 function spinButtonClicked(event: createjs.MouseEvent) {
     createjs.Sound.play("spinning");
-   /* setInterval(function () {
-        //if (stop > 10) { clearInterval(muyvar); }
+  
+   /* var myvar = setInterval(function () {
+
         for (var index = 0; index < NUM_REELS; index++) {
             reelContainers[index].removeAllChildren();
-            tiles[index] = new createjs.Bitmap("assets/images/" + spinResult[index] + ".png");
+            tiles[index] = new createjs.Bitmap("assets/images/" + stop.toString() + ".png");
             reelContainers[index].addChild(tiles[index]);
         }
-        console.log("sdf");
-        
-    }, 500)*/
+        stop += 1;
+        if (stop >= 8) { stop = 1; clearInterval(myvar); }
+        console.log(stop.toString());
 
-    setTimeout(function () {   
+    }, 190) */
+
+   // setTimeout(function () {   
 
     if (playerMoney == 0) {
         if (confirm("You ran out of Money! \nDo you want to play again?")) {
@@ -428,27 +431,17 @@ function spinButtonClicked(event: createjs.MouseEvent) {
         alert("Please enter a valid bet amount");
     }
 
+    
     // Iterate over the number of reels
    
 
-       // for (var index = 0; index < NUM_REELS; index++) {
-     //      reelContainers[index].removeAllChildren();
-     //       tiles[index] = new createjs.Bitmap("assets/images/" + spinResult[index] + ".png");
-      //      reelContainers[index].addChild(tiles[index]);
-      //  }
-    }, 1500);
-   // var myvar=setInterval(function () {
-        //if (stop > 10) { clearInterval(muyvar); }
-    //    for (var index = 0; index < NUM_REELS; index++) {
-       //     reelContainers[index].removeAllChildren();
-     //       tiles[index] = new createjs.Bitmap("assets/images/" + spinResult[index] + ".png");
-       //     reelContainers[index].addChild(tiles[index]);
-      //  }
-      //  stop += 1;
-      //  if (stop > 10) { clearInterval(myvar); }
-      //  console.log(stop.toString());
-
- //   }, 500) 
+        for (var index = 0; index < NUM_REELS; index++) {
+           reelContainers[index].removeAllChildren();
+            tiles[index] = new createjs.Bitmap("assets/images/" + spinResult[index] + ".png");
+            reelContainers[index].addChild(tiles[index]);
+        }
+  //  }, 1500);
+   
 
 }
 
@@ -581,4 +574,18 @@ function main() {
     //Add label that is visible when form loads
     startLbl = new objects.Label("Click 'START' button\n\n to start game", 25, 415, false);
     stage.addChild(startLbl);
+
+    
+}
+
+//Utility function that takes care wheather to enable or disable spinn button
+function checkBet() {
+    if ((playerBet > playerMoney) || (playerBet <= 0)) {
+
+        spinButton.mouseEnabled = false;
+    }
+    else {
+
+        spinButton.mouseEnabled = true;
+    }
 }

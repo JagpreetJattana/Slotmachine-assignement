@@ -1,5 +1,6 @@
 var config;
 (function (config) {
+    //this class defines constants that are used in game
     // FONT CONSTANTS
     config.FONT_LABEL = "12px";
     config.FONT_SMALL = "20px";

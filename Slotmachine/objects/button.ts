@@ -2,7 +2,7 @@
 
 
 module objects {
-    // BUTTON CLASS +++++++++++++++++++++++++++++
+    // BUTTON CLASS to set the properties of the buttons used
     export class Button extends createjs.Sprite {
         // CONSTRUCTOR +++++++++++++++++++++++++++
         constructor(imageString: string, x: number, y: number, centered: boolean) {

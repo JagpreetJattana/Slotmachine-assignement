@@ -62,6 +62,14 @@
     <Content Include="assets\audio\powerOff.wav" />
     <Content Include="assets\audio\spinning.wav" />
     <Content Include="assets\audio\start.wav" />
+    <Content Include="assets\images\1.png" />
+    <Content Include="assets\images\2.png" />
+    <Content Include="assets\images\3.png" />
+    <Content Include="assets\images\4.png" />
+    <Content Include="assets\images\5.png" />
+    <Content Include="assets\images\6.png" />
+    <Content Include="assets\images\7.png" />
+    <Content Include="assets\images\8.png" />
     <Content Include="assets\images\atlas.png" />
     <Content Include="assets\images\atlas2.png" />
     <Content Include="assets\images\bananaSym.png" />
