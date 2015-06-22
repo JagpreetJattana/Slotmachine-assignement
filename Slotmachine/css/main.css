@@ -1,4 +1,7 @@
 ﻿body {
+    background-image:url("../Assets/Images/mainBackground.jpg");
+background-repeat:no-repeat;
+background-size:cover;
 }
 
 canvas {

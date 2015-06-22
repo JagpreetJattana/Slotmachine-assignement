@@ -82,6 +82,7 @@
     <Content Include="assets\images\button-template.png" />
     <Content Include="assets\images\cherrySym.png" />
     <Content Include="assets\images\grapesSym.png" />
+    <Content Include="assets\images\mainBackground.jpg" />
     <Content Include="assets\images\orangeSym.png" />
     <Content Include="assets\images\powerButton.png" />
     <Content Include="assets\images\resetButton.png" />
