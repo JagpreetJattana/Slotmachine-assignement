@@ -73,8 +73,6 @@ var atlas ={
 
 
 // Game Variables
-var txtBox: createjs.TextLoader;
-var txtbb;
 var background: createjs.Bitmap;
 var textureAtlas: createjs.SpriteSheet;
 var powerButton: objects.Button;
@@ -157,9 +155,9 @@ function setupStats() {
     stats = new Stats();
     stats.setMode(0); // set to fps
 
-    // align bottom-right
+    // align top-right
     stats.domElement.style.position = 'absolute';
-    stats.domElement.style.left = '430px';
+    stats.domElement.style.left = '330px';
     stats.domElement.style.top = '10px';
 
     document.body.appendChild(stats.domElement);
@@ -170,6 +168,7 @@ function setupStats() {
 function gameLoop() {
     stats.begin(); // Begin measuring
     
+    //calling method that check wether to enable or diable spinn button
     checkBet();
     stage.update();
     
@@ -399,7 +398,7 @@ function showPlayerStats() {
 function spinButtonClicked(event: createjs.MouseEvent) {
     createjs.Sound.play("spinning");
     //followin code is for creating animation effect
-       /*  var myvar = setInterval(function () {           
+         var myvar = setInterval(function () {           
             reel1 = Math.floor(Math.random() * 8 + 1);
             reel2 = Math.floor(Math.random() * 8 + 1);
             reel3 = Math.floor(Math.random() * 8 + 1);
@@ -415,13 +414,13 @@ function spinButtonClicked(event: createjs.MouseEvent) {
             tiles[2] = new createjs.Bitmap("assets/images/" + reel3.toString() + ".png");
             reelContainers[2].addChild(tiles[2]);
             stop += 1;
-            if (stop >= 17) { stop =1;clearInterval(myvar); }
+            if (stop >= 24) { stop =1;clearInterval(myvar); }
             
 
-        }, 90)*/
+        }, 90)
     
     //following is the code that produces results
-   // setTimeout(function () {   
+    setTimeout(function () {   
 
     if (playerMoney == 0) {
         if (confirm("You ran out of Money! \nDo you want to play again?")) {
@@ -460,7 +459,7 @@ function spinButtonClicked(event: createjs.MouseEvent) {
             tiles[index] = new createjs.Bitmap("assets/images/" + spinResult[index] + ".png");
             reelContainers[index].addChild(tiles[index]);
         }
-   // }, 1500);
+    }, 2100);
    
 
 }
@@ -485,7 +484,7 @@ function betOneButtonClicked(event: createjs.MouseEvent) {
     betOneLbl = new objects.Label("$1", 160, 385, false);
     stage.addChild(betOneLbl);
     
-    txtbb = (<HTMLTextAreaElement>document.getElementById("txtBoxBet")).value;
+   
 
 }
 
@@ -594,17 +593,13 @@ function main() {
     //Add label that is visible when form loads
     startLbl = new objects.Label("Click 'START' button\n\n to start game", 25, 415, false);
     stage.addChild(startLbl);
-    //txtBox = new createjs.TextLoader(document.getElementById("txtBoxBet"));
-    
-   
-    //stage.addChild(document.createElement("txtBoxBet"));
     
     
 }
 
 //Utility function that takes care wheather to enable or disable spinn button
 function checkBet() {
-    console.log(txtbb);
+    
     if ((playerBet > playerMoney) || (playerBet <= 0)) {
 
         spinButton.mouseEnabled = false;
